@@ -4,21 +4,21 @@ import textwrap
 
 class Cliente: 
     def __init__(self, endereco):
-        self._endereco = endereco
-        self._contas = []
+        self.endereco = endereco
+        self.contas = []
     
     def realizar_transacao(self, conta, transacao):
         transacao.registrar(conta)
 
     def adicionar_conta(self, conta): 
-        self._contas.append(conta) 
+        self.contas.append(conta) 
 
 class PessoaFisica(Cliente): 
     def __init__(self, nome, cpf, data_nascimento, endereco):
         super().__init__(endereco) 
-        self._nome = nome
-        self._cpf = cpf
-        self._data_nascimento = data_nascimento
+        self.nome = nome
+        self.cpf = cpf
+        self.data_nascimento = data_nascimento
 
 class Conta: 
     def __init__(self, numero, cliente):
@@ -53,7 +53,7 @@ class Conta:
         return self._historico
 
     def sacar(self, valor):
-        saldo = self._saldo 
+        saldo = self.saldo 
         excedeu_saldo = valor > saldo 
 
         if excedeu_saldo:
@@ -82,16 +82,16 @@ class Conta:
 class ContaCorrente(Conta): 
     def __init__(self, numero, cliente, limite=500, limite_saques=3):
         super().__init__(numero, cliente)
-        self.limite = limite
-        self.limite_saques = limite_saques 
+        self._limite = limite
+        self._limite_saques = limite_saques 
 
     def sacar(self, valor): 
         numero_saques = len(
             [transacao for transacao in self.historico.transacoes if transacao["tipo"]==Saque.__name__]
         )
 
-        excedeu_limite = valor > self.limite 
-        excedeu_saques = numero_saques >= self.limite_saques
+        excedeu_limite = valor > self._limite 
+        excedeu_saques = numero_saques >= self._limite_saques
 
         if excedeu_limite: 
             print("### Operação falhou! Você excedeu o valor do limite de saque. ###")
@@ -106,9 +106,9 @@ class ContaCorrente(Conta):
     
     def __str__(self):
         return f'''
-            Agencia: \t{self.agencia}
-            Conta: \t{self.numero}
-            Titular: \t{self.cliente.nome}
+            Agencia:\t{self.agencia}
+            Conta:\t\t{self.numero}
+            Titular:\t{self.cliente.nome}
         '''
     
 class Historico:  
@@ -313,7 +313,7 @@ def main():
             criar_conta(numero_conta, clientes, contas)
 
         elif opcao == "4": 
-            listar_contas(clientes)
+            listar_contas(contas)
 
         elif opcao == "6": 
             break
